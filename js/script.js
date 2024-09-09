@@ -72,10 +72,14 @@ class Game {
         this.numButtons = numButtons;
         this.resetGame();
         this.createButtons();
-        // Start shuffling buttons after delay
+    
+        // Hide the "Go" button when the game starts
+        document.getElementById('startButton').style.display = 'none';
+    
+        // Delay the shuffling process to begin after the initial row layout
         setTimeout(() => {
-            this.scrambleButtons(numButtons);
-        }, numButtons * 1000); // Delay based on number of buttons
+            this.scrambleButtons(numButtons); // Start scrambling after n seconds
+        }, numButtons * 1000); // Pause for n seconds based on the number of buttons
     }
 
     // Reset the game area and clear old buttons
@@ -115,15 +119,16 @@ class Game {
 
     // Shuffle the buttons and reposition them randomly
     scrambleButtons(times) {
-        const gameArea = document.getElementById('gameArea');
-        const gameAreaWidth = gameArea.offsetWidth;
-        const gameAreaHeight = gameArea.offsetHeight;
-        const buttonWidth = this.emToPixels(this.buttonWidthEm);
-        const buttonHeight = this.emToPixels(this.buttonHeightEm);
-
         let scrambleCount = 0;
-
+    
         const scrambleInterval = setInterval(() => {
+            // Dynamically retrieve the current game area dimensions
+            const gameArea = document.getElementById('gameArea');
+            const gameAreaWidth = gameArea.offsetWidth;
+            const gameAreaHeight = gameArea.offsetHeight;
+            const buttonWidth = this.emToPixels(this.buttonWidthEm);
+            const buttonHeight = this.emToPixels(this.buttonHeightEm);
+    
             if (scrambleCount >= times) {
                 clearInterval(scrambleInterval); // Stop shuffling after desired times
                 this.hideNumbers(); // Hide numbers after shuffling
@@ -132,21 +137,21 @@ class Game {
                 this.buttons.forEach(button => {
                     let left, top;
                     let overlapping;
-
+    
                     // Find a random non-overlapping position
                     do {
                         overlapping = false;
-
-                        // Random positions within the game area
+    
+                        // Random positions within the current game area size
                         left = Math.random() * (gameAreaWidth - buttonWidth);
                         top = Math.random() * (gameAreaHeight - buttonHeight);
-
+    
                         // Check for overlap with other buttons
                         for (let otherButton of this.buttons) {
                             if (otherButton !== button) {
                                 const otherLeft = parseFloat(otherButton.element.style.left);
                                 const otherTop = parseFloat(otherButton.element.style.top);
-
+    
                                 if (left < otherLeft + buttonWidth &&
                                     left + buttonWidth > otherLeft &&
                                     top < otherTop + buttonHeight &&
@@ -157,14 +162,14 @@ class Game {
                             }
                         }
                     } while (overlapping);
-
+    
                     // Set new position
                     button.setPosition(left, top);
                 });
                 scrambleCount++;
             }
         }, 2000); // Shuffle every 2 seconds
-    }
+    }    
 
     hideNumbers() {
         this.buttons.forEach(button => {
@@ -174,23 +179,26 @@ class Game {
 
     makeButtonsClickable() {
         let currentClickIndex = 0;
-
-        // Make each button clickable to check the correct order
+    
         this.buttons.forEach(button => {
             button.element.addEventListener('click', () => {
                 if (button.label == this.originalOrder[currentClickIndex].label) {
-                    // Correct click, show number again
-                    button.showNumber();
+                    // Correct click
+                    button.showNumber(); // Show the number again
                     currentClickIndex++;
-
-                    // If all buttons are clicked in correct order
+    
+                    // Check if the user has clicked all buttons in the correct order
                     if (currentClickIndex === this.numButtons) {
                         alert('Excellent memory!');
+                        // Show the "Go" button again when the game ends
+                        document.getElementById('startButton').style.display = 'block';
                     }
                 } else {
-                    // Wrong click, show the correct order
+                    // Incorrect click
                     alert('Wrong order!');
                     this.revealCorrectOrder();
+                    // Show the "Go" button again after wrong order
+                    document.getElementById('startButton').style.display = 'block';
                 }
             });
         });
