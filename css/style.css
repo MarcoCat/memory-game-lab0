@@ -1,0 +1,48 @@
+/* This code was developed with the assistance of ChatGPT */
+
+/* Basic page styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Title styling */
+h1 {
+    font-size: 2em;
+    text-align: center;
+    margin: 0;
+}
+
+/* Input area styling */
+.input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    padding: 10px 0;
+}
+
+/* Number input styling */
+#numButtons {
+    margin-right: 10px;
+    width: 60px;
+}
+
+/* Button styling */
+#startButton {
+    height: 40px;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+/* Game area styling */
+#gameArea {
+    position: absolute;
+    top: 150px; /* Ensures space for the input section */
+    left: 30px;
+    right: 30px;
+    bottom: 30px;
+    border: 1px solid black;
+    overflow: hidden; /* Prevents buttons from going outside the play area */
+}
